@@ -48,6 +48,36 @@
       app-toolbar paper-input {
         padding: 0 5%;
         @apply --layout-flex;
+
+        --paper-input-container: {
+          background: rgba(0, 0, 0, 0.1);
+          /* background: rgba(255, 255, 255, 0.25); */
+          box-shadow: 0px 1px 1.5px rgba(0, 0, 0, 0.06),
+                      0px 1px 1px rgba(0, 0, 0, 0.12);
+          /* @apply --shadow-elevation-2dp; */
+        };
+
+        --paper-input-container-input: {
+          padding-left: 18px;
+          font-size: 18px;
+          line-height: 18px;
+        };
+
+        --paper-input-prefix: {
+          padding: 0 18px;
+        };
+
+        --paper-input-suffix: {
+          padding: 0 18px;
+        };
+
+        --paper-input-container-underline: {
+          border-bottom: none;
+        };
+
+        --paper-input-container-underline-focus: {
+          border-bottom: none;
+        };
       }
 
       paper-progress {
@@ -57,7 +87,7 @@
         --paper-progress-container-color: transparent;
       }
 
-      paper-icon-button + [main-title] {
+      paper-icon-button+[main-title] {
         margin-left: 24px;
       }
 
@@ -89,22 +119,28 @@
 
   <app-toolbar>
     <paper-icon-button icon="arrow-back"></paper-icon-button>
+
     <div main-title spacer>
       <div>App name</div>
-      <paper-input no-label-float placeholder="Search"></paper-input>
+      <paper-input no-label-float placeholder="Search">
+        <iron-icon icon="search" slot="prefix"></iron-icon>
+        <iron-icon icon="clear" slot="suffix"></iron-icon>
+      </paper-input>
     </div>
+
     <paper-icon-button icon="menu"></paper-icon-button>
+
     <!-- <paper-progress value="10" indeterminate bottom-item></paper-progress> -->
   </app-toolbar>
 
-  <div class="content">
+  <main class="content">
     <div class="card">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
       Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
       irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
       cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </div>
-  </div>
+  </main>
 </body>
 
 </html>
