@@ -11,9 +11,12 @@
   <script src="../html-imports/html-imports.min.js"></script>
   <link rel="import" href="../font-roboto/roboto.html">
   <link rel="import" href="../app-layout/app-toolbar/app-toolbar.html">
+  <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+  <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
   <link rel="import" href="../iron-icons/iron-icons.html">
   <link rel="import" href="../polymer/lib/elements/custom-style.html">
   <link rel="import" href="../paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="../paper-input/paper-input.html">
   <link rel="import" href="../paper-progress/paper-progress.html">
   <link rel="import" href="../paper-styles/paper-styles.html">
   <link rel="import" href="../paper-styles/paper-styles-classes.html">
@@ -21,7 +24,7 @@
 
 <body unresolved>
   <custom-style>
-    <style>
+    <style include="iron-flex iron-positioning">
       body {
         margin: 0;
         @apply --paper-font-common-base;
@@ -33,6 +36,18 @@
       app-toolbar {
         background-color: white;
         @apply --shadow-elevation-3dp;
+        pointer-events: inherit;
+      }
+
+      app-toolbar [main-title] {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        pointer-events: inherit;
+      }
+
+      app-toolbar paper-input {
+        padding: 0 5%;
+        @apply --layout-flex;
       }
 
       paper-progress {
@@ -75,7 +90,8 @@
   <app-toolbar>
     <paper-icon-button icon="arrow-back"></paper-icon-button>
     <div main-title spacer>
-      App name
+      <div>App name</div>
+      <paper-input no-label-float placeholder="Search"></paper-input>
     </div>
     <paper-icon-button icon="menu"></paper-icon-button>
     <!-- <paper-progress value="10" indeterminate bottom-item></paper-progress> -->
