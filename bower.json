@@ -1,0 +1,22 @@
+{
+  "name": "oo-elements",
+  "description": "",
+  "version": "0.0.0",
+  "authors": [
+    "Benjamin Gudehus <hastebrot@gmail.com>"
+  ],
+  "homepage": "https://github.com/oolymer/oo-elements",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "app-layout": "PolymerElements/app-layout#2.1.1",
+    "font-roboto": "PolymerElements/font-roboto-local#1.1.0",
+    "polymer": "polymer/polymer#2.6.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#1.2.0"
+  }
+}
