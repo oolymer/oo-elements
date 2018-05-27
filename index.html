@@ -9,18 +9,18 @@
 
   <script src="../webcomponentsjs/webcomponents-loader.js"></script>
   <script src="../html-imports/html-imports.min.js"></script>
-  <link rel="import" href="../font-roboto/roboto.html">
   <link rel="import" href="../app-layout/app-toolbar/app-toolbar.html">
-  <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+  <link rel="import" href="../font-roboto/roboto.html">
   <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+  <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
   <link rel="import" href="../iron-icons/iron-icons.html">
-  <link rel="import" href="../polymer/lib/elements/custom-style.html">
   <link rel="import" href="../paper-icon-button/paper-icon-button.html">
   <link rel="import" href="../paper-input/paper-input.html">
   <link rel="import" href="../paper-progress/paper-progress.html">
-  <link rel="import" href="../paper-styles/paper-styles.html">
-  <link rel="import" href="../paper-styles/paper-styles-classes.html">
   <link rel="import" href="../paper-styles/classes/global.html">
+  <link rel="import" href="../paper-styles/paper-styles-classes.html">
+  <link rel="import" href="../paper-styles/paper-styles.html">
+  <link rel="import" href="../polymer/lib/elements/custom-style.html">
 </head>
 
 <body unresolved>
@@ -38,7 +38,7 @@
         /* background: white; */
         background: var(--paper-indigo-400);
         color: white;
-        @apply --shadow-elevation-4dp;
+        @apply --shadow-elevation-3dp;
       }
 
       app-toolbar [main-title] {
@@ -57,7 +57,7 @@
         --paper-input-container-color: white;
 
         --paper-input-container: {
-          padding: 6px 0;
+          padding: 5px 0;
           /* background: rgba(0, 0, 0, 0.1); */
           color: var(--paper-input-container-color-text, white);
           background: var(--paper-input-container-background, rgba(255, 255, 255, 0.25));
@@ -97,7 +97,7 @@
 
       app-toolbar paper-input[focused] {
         --paper-input-color: black;
-        --paper-input-container-color: white;
+        --paper-input-container-color: var(--paper-grey-400);
         --paper-input-container-color-text: black;
         --paper-input-container-background: white;
         --paper-input-container-input-color: black;
@@ -147,7 +147,7 @@
       <div>Oolymer Demo</div>
     </div>
 
-    <paper-input no-label-float placeholder="Search">
+    <paper-input no-label-float placeholder="Search entries">
       <div slot="prefix">
         <iron-icon icon="search"></iron-icon>
       </div>
