@@ -48,15 +48,9 @@
         pointer-events: inherit;
       }
 
-      app-toolbar paper-input[focused] {
-        /* --paper-input-container: { */
-          background: white;
-          border-radius: 2px;
-          color: black;
-        /* } */
-        --paper-input-container-input: {
-          color: black;
-        };
+      app-toolbar paper-input paper-icon-button {
+        margin: -8px;
+        --paper-icon-button-ink-color: transparent;
       }
 
       app-toolbar paper-input {
@@ -68,8 +62,9 @@
         --paper-input-container: {
           padding: 6px 0;
           /* background: rgba(0, 0, 0, 0.1); */
-          background: rgba(255, 255, 255, 0.25);
-          box-shadow: 0px 1px 1.5px rgba(0, 0, 0, 0.06)
+          color: var(--paper-input-container-color-text, white);
+          background: var(--paper-input-container-background, rgba(255, 255, 255, 0.25));
+          box-shadow: 0px 1px 1.5px rgba(0, 0, 0, 0.06),
                       0px 1px 1px rgba(0, 0, 0, 0.12);
           /* @apply --shadow-elevation-2dp; */
           border-radius: 2px;
@@ -79,7 +74,7 @@
           padding-left: 18px;
           font-size: 18px;
           line-height: 18px;
-          color: white;
+          color: var(--paper-input-container-input-color, white);
         };
 
         --paper-input-prefix: {
@@ -101,6 +96,14 @@
         --paper-input-container-underline-focus: {
           border-bottom: none;
         };
+      }
+
+      app-toolbar paper-input[focused] {
+        --paper-input-color: black;
+        --paper-input-container-color: white;
+        --paper-input-container-color-text: black;
+        --paper-input-container-background: white;
+        --paper-input-container-input-color: black;
       }
 
       paper-progress {
@@ -146,8 +149,12 @@
     <div main-title spacer>
       <div>App name</div>
       <paper-input no-label-float placeholder="Search">
-        <iron-icon icon="search" slot="prefix"></iron-icon>
-        <iron-icon icon="clear" slot="suffix"></iron-icon>
+        <div slot="prefix">
+          <iron-icon icon="search" slot="prefix"></iron-icon>
+        </div>
+        <div slot="suffix">
+          <paper-icon-button icon="clear"></paper-icon-button>
+        </div>
       </paper-input>
     </div>
 
