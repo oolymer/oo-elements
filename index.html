@@ -38,14 +38,11 @@
         /* background: white; */
         background: var(--paper-indigo-400);
         color: white;
-        @apply --shadow-elevation-3dp;
-        pointer-events: inherit;
+        @apply --shadow-elevation-4dp;
       }
 
       app-toolbar [main-title] {
-        @apply --layout-horizontal;
-        @apply --layout-center;
-        pointer-events: inherit;
+        flex: inherit;
       }
 
       app-toolbar paper-input paper-icon-button {
@@ -147,16 +144,18 @@
     <paper-icon-button icon="arrow-back"></paper-icon-button>
 
     <div main-title spacer>
-      <div>App name</div>
-      <paper-input no-label-float placeholder="Search">
-        <div slot="prefix">
-          <iron-icon icon="search" slot="prefix"></iron-icon>
-        </div>
-        <div slot="suffix">
-          <paper-icon-button icon="clear"></paper-icon-button>
-        </div>
-      </paper-input>
+      <div>Oolymer Demo</div>
     </div>
+
+    <paper-input no-label-float placeholder="Search">
+      <div slot="prefix">
+        <iron-icon icon="search"></iron-icon>
+      </div>
+
+      <div slot="suffix">
+        <paper-icon-button icon="clear"></paper-icon-button>
+      </div>
+    </paper-input>
 
     <paper-icon-button icon="menu"></paper-icon-button>
     <!-- <paper-progress value="10" indeterminate bottom-item></paper-progress> -->
