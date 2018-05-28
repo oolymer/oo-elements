@@ -1,0 +1,98 @@
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-styles/paper-styles-classes.html">
+<link rel="import" href="../paper-styles/paper-styles.html">
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="oo-toolbar-search">
+  <template>
+    <style include="iron-flex iron-positioning">
+      :host {
+        display: block;
+        @apply --layout-flex;
+      }
+
+      paper-input {
+        margin: 0 5%;
+
+        --paper-input-container-color: white;
+
+        --paper-input-container: {
+          padding: 5px 0;
+          /* background: rgba(0, 0, 0, 0.1); */
+          color: var(--paper-input-container-color-text, white);
+          background: var(--paper-input-container-background, rgba(255, 255, 255, 0.25));
+          box-shadow: 0px 1px 1.5px rgba(0, 0, 0, 0.06),
+                      0px 1px 1px rgba(0, 0, 0, 0.12);
+          /* @apply --shadow-elevation-2dp; */
+          border-radius: 2px;
+        };
+
+        --paper-input-container-input: {
+          padding-left: 18px;
+          font-size: 18px;
+          line-height: 18px;
+          color: var(--paper-input-container-input-color, white);
+        };
+
+        --paper-input-prefix: {
+          padding: 0 18px;
+        };
+
+        --paper-input-suffix: {
+          padding: 0 18px;
+        };
+
+        --paper-input-container-input-focus: {
+          background: white;
+        };
+
+        --paper-input-container-underline: {
+          border-bottom: none;
+        };
+
+        --paper-input-container-underline-focus: {
+          border-bottom: none;
+        };
+      }
+
+      paper-input[focused] {
+        --paper-input-color: black;
+        --paper-input-container-color: var(--paper-grey-400);
+        --paper-input-container-color-text: black;
+        --paper-input-container-background: white;
+        --paper-input-container-input-color: black;
+      }
+
+      paper-input paper-icon-button {
+        margin: -8px;
+        --paper-icon-button-ink-color: transparent;
+      }
+    </style>
+
+    <paper-input no-label-float placeholder="Search entries">
+      <div slot="prefix">
+        <iron-icon icon="search"></iron-icon>
+      </div>
+
+      <div slot="suffix">
+        <paper-icon-button icon="clear"></paper-icon-button>
+      </div>
+    </paper-input>
+  </template>
+
+  <script>
+    (function () {
+      class OoToolbarSearch extends Polymer.Element {
+        static get is() {
+          return "oo-toolbar-search"
+        }
+      }
+
+      window.customElements.define(OoToolbarSearch.is, OoToolbarSearch)
+    }())
+  </script>
+</dom-module>

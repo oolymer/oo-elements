@@ -10,17 +10,15 @@
   <script src="../webcomponentsjs/webcomponents-loader.js"></script>
   <script src="../html-imports/html-imports.min.js"></script>
   <link rel="import" href="../font-roboto/roboto.html">
-  <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-  <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
   <link rel="import" href="../iron-icons/iron-icons.html">
   <link rel="import" href="../paper-icon-button/paper-icon-button.html">
-  <link rel="import" href="../paper-input/paper-input.html">
   <link rel="import" href="../paper-progress/paper-progress.html">
   <link rel="import" href="../paper-styles/classes/global.html">
   <link rel="import" href="../paper-styles/paper-styles-classes.html">
   <link rel="import" href="../paper-styles/paper-styles.html">
   <link rel="import" href="../polymer/lib/elements/custom-style.html">
   <link rel="import" href="oo-toolbar.html">
+  <link rel="import" href="oo-toolbar-search.html">
 </head>
 
 <body unresolved>
@@ -63,19 +61,11 @@
   <oo-toolbar>
     <paper-icon-button icon="arrow-back"></paper-icon-button>
 
-    <div main-title spacer>
+    <div main-title spacer no-flex>
       <div>Oolymer Demo</div>
     </div>
 
-    <paper-input no-label-float placeholder="Search entries">
-      <div slot="prefix">
-        <iron-icon icon="search"></iron-icon>
-      </div>
-
-      <div slot="suffix">
-        <paper-icon-button icon="clear"></paper-icon-button>
-      </div>
-    </paper-input>
+    <oo-toolbar-search></oo-toolbar-search>
 
     <paper-icon-button icon="menu"></paper-icon-button>
     <!-- <paper-progress value="10" indeterminate bottom-item></paper-progress> -->
