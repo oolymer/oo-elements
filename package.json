@@ -22,7 +22,7 @@
     "dev:serve-watch": "./node_modules/.bin/npm-run-all --serial util:delay serve:watch",
     "install:bower": "./node_modules/.bin/bower install --force-latest",
     "serve": "./node_modules/.bin/polyserve --port $npm_package_config_portServe",
-    "serve:watch": "./node_modules/.bin/browser-sync start --port $npm_package_config_portServeWatch --proxy \"localhost:$npm_package_config_portServe\" --no-ui --files '*.js, *.html, demo/**/*.html, src/**/*.html, test/**/*.html' --startPath \"/components/$npm_package_name/\"",
+    "serve:watch": "./node_modules/.bin/browser-sync start --port $npm_package_config_portServeWatch --proxy \"localhost:$npm_package_config_portServe\" --no-ui --files '*.js, *.html, demo/**/*.html, src/**/*.html, test/**/*.html' --startPath \"/components/$npm_package_name/demo/oo-data-table-demo.html\"",
     "util:delay": "node ./node_modules/.bin/npm-delay 1000"
   },
   "config": {

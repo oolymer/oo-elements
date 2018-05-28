@@ -1,0 +1,32 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="oo-data-table">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <app-toolbar>
+      <slot></slot>
+    </app-toolbar>
+  </template>
+
+  <script>
+    (function () {
+      class OoDataTable extends Polymer.Element {
+        static get is() {
+          return "oo-data-table"
+        }
+
+        ready() {
+          super.ready()
+          console.log("[oo-data-table]", "ready")
+        }
+      }
+
+      window.customElements.define(OoDataTable.is, OoDataTable)
+    }())
+  </script>
+</dom-module>
