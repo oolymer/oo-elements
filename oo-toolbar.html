@@ -1,0 +1,109 @@
+<link rel="import" href="../app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="oo-toolbar">
+  <template>
+    <style include="iron-flex iron-positioning">
+      :host {
+        display: block;
+      }
+
+      app-toolbar {
+        /* background: white; */
+        background: var(--paper-indigo-400);
+        color: white;
+        @apply --shadow-elevation-3dp;
+      }
+
+      app-toolbar ::slotted([main-title]) {
+        flex: inherit;
+      }
+
+      /* app-toolbar ::slotted(paper-icon-button + [main-title]) {
+        margin-left: 24px;
+      } */
+
+      app-toolbar ::slotted(paper-input) {
+        @apply --layout-flex;
+        margin: 0 5%;
+
+        --paper-input-container-color: white;
+
+        --paper-input-container: {
+          padding: 5px 0;
+          /* background: rgba(0, 0, 0, 0.1); */
+          color: var(--paper-input-container-color-text, white);
+          background: var(--paper-input-container-background, rgba(255, 255, 255, 0.25));
+          box-shadow: 0px 1px 1.5px rgba(0, 0, 0, 0.06),
+                      0px 1px 1px rgba(0, 0, 0, 0.12);
+          /* @apply --shadow-elevation-2dp; */
+          border-radius: 2px;
+        };
+
+        --paper-input-container-input: {
+          padding-left: 18px;
+          font-size: 18px;
+          line-height: 18px;
+          color: var(--paper-input-container-input-color, white);
+        };
+
+        --paper-input-prefix: {
+          padding: 0 18px;
+        };
+
+        --paper-input-suffix: {
+          padding: 0 18px;
+        };
+
+        --paper-input-container-input-focus: {
+          background: white;
+        };
+
+        --paper-input-container-underline: {
+          border-bottom: none;
+        };
+
+        --paper-input-container-underline-focus: {
+          border-bottom: none;
+        };
+      }
+
+      app-toolbar ::slotted(paper-input[focused]) {
+        --paper-input-color: black;
+        --paper-input-container-color: var(--paper-grey-400);
+        --paper-input-container-color-text: black;
+        --paper-input-container-background: white;
+        --paper-input-container-input-color: black;
+      }
+
+      /* app-toolbar ::slotted(paper-input paper-icon-button) {
+        margin: -8px;
+        --paper-icon-button-ink-color: transparent;
+      } */
+
+      app-toolbar ::slotted(paper-progress) {
+        display: block;
+        width: 100%;
+        --paper-progress-active-color: rgba(255, 255, 255, 0.5);
+        --paper-progress-container-color: transparent;
+      }
+
+    </style>
+
+    <app-toolbar>
+      <slot></slot>
+    </app-toolbar>
+  </template>
+
+  <script>
+    (function () {
+      class OoToolbar extends Polymer.Element {
+        static get is() {
+          return "oo-toolbar"
+        }
+      }
+
+      window.customElements.define(OoToolbar.is, OoToolbar)
+    }())
+  </script>
+</dom-module>

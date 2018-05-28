@@ -9,7 +9,6 @@
 
   <script src="../webcomponentsjs/webcomponents-loader.js"></script>
   <script src="../html-imports/html-imports.min.js"></script>
-  <link rel="import" href="../app-layout/app-toolbar/app-toolbar.html">
   <link rel="import" href="../font-roboto/roboto.html">
   <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
   <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
@@ -21,97 +20,18 @@
   <link rel="import" href="../paper-styles/paper-styles-classes.html">
   <link rel="import" href="../paper-styles/paper-styles.html">
   <link rel="import" href="../polymer/lib/elements/custom-style.html">
+  <link rel="import" href="oo-toolbar.html">
 </head>
 
 <body unresolved>
   <custom-style>
-    <style include="iron-flex iron-positioning">
+    <style>
       body {
         margin: 0;
         @apply --paper-font-common-base;
         background: var(--paper-grey-200);
         color: var(--paper-grey-900);
         overflow: hidden;
-      }
-
-      app-toolbar {
-        /* background: white; */
-        background: var(--paper-indigo-400);
-        color: white;
-        @apply --shadow-elevation-3dp;
-      }
-
-      app-toolbar [main-title] {
-        flex: inherit;
-      }
-
-      app-toolbar paper-input paper-icon-button {
-        margin: -8px;
-        --paper-icon-button-ink-color: transparent;
-      }
-
-      app-toolbar paper-input {
-        @apply --layout-flex;
-        margin: 0 5%;
-
-        --paper-input-container-color: white;
-
-        --paper-input-container: {
-          padding: 5px 0;
-          /* background: rgba(0, 0, 0, 0.1); */
-          color: var(--paper-input-container-color-text, white);
-          background: var(--paper-input-container-background, rgba(255, 255, 255, 0.25));
-          box-shadow: 0px 1px 1.5px rgba(0, 0, 0, 0.06),
-                      0px 1px 1px rgba(0, 0, 0, 0.12);
-          /* @apply --shadow-elevation-2dp; */
-          border-radius: 2px;
-        };
-
-        --paper-input-container-input: {
-          padding-left: 18px;
-          font-size: 18px;
-          line-height: 18px;
-          color: var(--paper-input-container-input-color, white);
-        };
-
-        --paper-input-prefix: {
-          padding: 0 18px;
-        };
-
-        --paper-input-suffix: {
-          padding: 0 18px;
-        };
-
-        --paper-input-container-input-focus: {
-          background: white;
-        };
-
-        --paper-input-container-underline: {
-          border-bottom: none;
-        };
-
-        --paper-input-container-underline-focus: {
-          border-bottom: none;
-        };
-      }
-
-      app-toolbar paper-input[focused] {
-        --paper-input-color: black;
-        --paper-input-container-color: var(--paper-grey-400);
-        --paper-input-container-color-text: black;
-        --paper-input-container-background: white;
-        --paper-input-container-input-color: black;
-      }
-
-      paper-progress {
-        display: block;
-        width: 100%;
-        --paper-progress-active-color: rgba(255, 255, 255, 0.5);
-        --paper-progress-container-color: transparent;
-      }
-
-      paper-icon-button+[main-title] {
-        margin-left: 24px;
       }
 
       .content {
@@ -140,7 +60,7 @@
     </style>
   </custom-style>
 
-  <app-toolbar>
+  <oo-toolbar>
     <paper-icon-button icon="arrow-back"></paper-icon-button>
 
     <div main-title spacer>
@@ -159,7 +79,7 @@
 
     <paper-icon-button icon="menu"></paper-icon-button>
     <!-- <paper-progress value="10" indeterminate bottom-item></paper-progress> -->
-  </app-toolbar>
+  </oo-toolbar>
 
   <main class="content">
     <div class="card">
