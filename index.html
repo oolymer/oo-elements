@@ -2,10 +2,9 @@
 <html>
 
 <head>
-  <title>Demo</title>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>Demo</title>
 
   <script src="../webcomponentsjs/webcomponents-loader.js"></script>
   <script src="../html-imports/html-imports.min.js"></script>
@@ -68,7 +67,7 @@
         }
       }
 
-      oo-toolbar {
+      oo-toolbar[styled] {
         --oo-toolbar-background: var(--paper-indigo-400);
         --oo-toolbar-color: white;
         --oo-toolbar-toolbar-progress: {
@@ -76,7 +75,7 @@
         };
       }
 
-      oo-toolbar-search {
+      oo-toolbar[styled] oo-toolbar-search {
         --oo-toolbar-search-input-container-background: rgba(255, 255, 255, 0.25);
         --oo-toolbar-search-input-container-color: white;
         --oo-toolbar-search-input-container-color-placeholder: white;
@@ -94,7 +93,22 @@
       <div>Oolymer Demo</div>
     </div>
 
-    <oo-toolbar-search placeholder="Search entries"></oo-toolbar-search>
+    <oo-toolbar-search input="" placeholder="Search entries"></oo-toolbar-search>
+
+    <paper-icon-button icon="menu"></paper-icon-button>
+    <!-- <paper-progress value="10" indeterminate bottom-item></paper-progress> -->
+  </oo-toolbar>
+
+  <br>
+
+  <oo-toolbar styled>
+    <paper-icon-button icon="arrow-back"></paper-icon-button>
+
+    <div main-title spacer no-flex>
+      <div>Oolymer Demo</div>
+    </div>
+
+    <oo-toolbar-search input="" placeholder="Search entries"></oo-toolbar-search>
 
     <paper-icon-button icon="menu"></paper-icon-button>
     <!-- <paper-progress value="10" indeterminate bottom-item></paper-progress> -->
