@@ -13,29 +13,36 @@
       :host {
         display: block;
         @apply --layout-flex;
+        --oo-toolbar-search-input-container-background: rgba(255, 255, 255, 0.25);
+        --oo-toolbar-search-input-container-color: white;
+        --oo-toolbar-search-input-container-color-placeholder: white;
+        --oo-toolbar-search-input-focused-container-background: white;
+        --oo-toolbar-search-input-focused-container-color: black;
+        --oo-toolbar-search-input-focused-container-color-placeholder: var(--paper-grey-400);
       }
 
       paper-input {
         margin: 0 5%;
 
-        /* --paper-input-container-color: white; */
+        --paper-input-container-color: var(--oo-toolbar-search-input-container-color-placeholder);
+        @apply --oo-toolbar-search-input;
 
         --paper-input-container: {
           padding: 5px 0;
           border-radius: 2px;
-          background: rgba(0, 0, 0, 0.1);
-          /* color: var(--paper-input-container-color-text, white);
-          background: var(--paper-input-container-background, rgba(255, 255, 255, 0.25)); */
           box-shadow: 0px 1px 1.5px rgba(0, 0, 0, 0.06),
                       0px 1px 1px rgba(0, 0, 0, 0.12);
-          /* @apply --shadow-elevation-2dp; */
+          background: var(--oo-toolbar-search-input-container-background, rgba(0, 0, 0, 0.1));
+          color: var(--oo-toolbar-search-input-container-color);
+          @apply --oo-toolbar-search-input-container;
         };
 
         --paper-input-container-input: {
           padding-left: 18px;
           font-size: 18px;
           line-height: 18px;
-          /* color: var(--paper-input-container-input-color, white); */
+          color: var(--oo-toolbar-search-input-container-color);
+          @apply --oo-toolbar-search-input-container-input;
         };
 
         --paper-input-prefix: {
@@ -55,17 +62,21 @@
         };
       }
 
-      __paper-input[focused] {
-        --paper-input-color: black;
-        --paper-input-container-color: var(--paper-grey-400);
-        --paper-input-container-color-text: black;
-        --paper-input-container-background: white;
-        --paper-input-container-input-color: black;
+      paper-input[focused] {
+        --oo-toolbar-search-input-container-background: var(--oo-toolbar-search-input-focused-container-background);
+        --oo-toolbar-search-input-container-color: var(--oo-toolbar-search-input-focused-container-color);
+        --oo-toolbar-search-input-container-color-placeholder: var(--oo-toolbar-search-input-focused-container-color-placeholder);
+        @apply --oo-toolbar-search-input-focused;
+      }
+
+      paper-input iron-icon {
+        @apply --oo-toolbar-search-input-icon;
       }
 
       paper-input paper-icon-button {
         margin: -8px;
         --paper-icon-button-ink-color: transparent;
+        @apply --oo-toolbar-search-input-button;
       }
     </style>
 
