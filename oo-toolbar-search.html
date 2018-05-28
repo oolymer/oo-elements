@@ -18,24 +18,24 @@
       paper-input {
         margin: 0 5%;
 
-        --paper-input-container-color: white;
+        /* --paper-input-container-color: white; */
 
         --paper-input-container: {
           padding: 5px 0;
-          /* background: rgba(0, 0, 0, 0.1); */
-          color: var(--paper-input-container-color-text, white);
-          background: var(--paper-input-container-background, rgba(255, 255, 255, 0.25));
+          border-radius: 2px;
+          background: rgba(0, 0, 0, 0.1);
+          /* color: var(--paper-input-container-color-text, white);
+          background: var(--paper-input-container-background, rgba(255, 255, 255, 0.25)); */
           box-shadow: 0px 1px 1.5px rgba(0, 0, 0, 0.06),
                       0px 1px 1px rgba(0, 0, 0, 0.12);
           /* @apply --shadow-elevation-2dp; */
-          border-radius: 2px;
         };
 
         --paper-input-container-input: {
           padding-left: 18px;
           font-size: 18px;
           line-height: 18px;
-          color: var(--paper-input-container-input-color, white);
+          /* color: var(--paper-input-container-input-color, white); */
         };
 
         --paper-input-prefix: {
@@ -44,10 +44,6 @@
 
         --paper-input-suffix: {
           padding: 0 18px;
-        };
-
-        --paper-input-container-input-focus: {
-          background: white;
         };
 
         --paper-input-container-underline: {
@@ -59,7 +55,7 @@
         };
       }
 
-      paper-input[focused] {
+      __paper-input[focused] {
         --paper-input-color: black;
         --paper-input-container-color: var(--paper-grey-400);
         --paper-input-container-color-text: black;
@@ -73,13 +69,13 @@
       }
     </style>
 
-    <paper-input no-label-float placeholder="Search entries">
+    <paper-input id="input" no-label-float value="{{input}}" placeholder="[[placeholder]]">
       <div slot="prefix">
         <iron-icon icon="search"></iron-icon>
       </div>
 
       <div slot="suffix">
-        <paper-icon-button icon="clear"></paper-icon-button>
+        <paper-icon-button icon="clear" hidden$="[[!input]]" on-tap="_clearInput"></paper-icon-button>
       </div>
     </paper-input>
   </template>
@@ -89,6 +85,36 @@
       class OoToolbarSearch extends Polymer.Element {
         static get is() {
           return "oo-toolbar-search"
+        }
+
+        static get properties() {
+          return {
+            input: {
+              type: String
+            },
+
+            placeholder: {
+              type: String
+            }
+          }
+        }
+
+        ready() {
+          super.ready()
+          this._initInputKeyBindings()
+        }
+
+        _initInputKeyBindings() {
+          this.$.input._acceptInput = this._acceptInput.bind(this)
+          this.$.input.addOwnKeyBinding("enter", "_acceptInput")
+        }
+
+        _acceptInput() {
+          console.log("accept input:", this.input)
+        }
+
+        _clearInput(event) {
+          this.set("input", null)
         }
       }
 
