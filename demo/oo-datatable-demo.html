@@ -9,12 +9,16 @@
   <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
 
   <link rel="import" href="../../font-roboto/roboto.html">
+  <link rel="import" href="../../iron-ajax/iron-ajax.html">
   <link rel="import" href="../../paper-styles/classes/global.html">
   <link rel="import" href="../../paper-styles/paper-styles-classes.html">
   <link rel="import" href="../../paper-styles/paper-styles.html">
   <link rel="import" href="../../polymer/lib/elements/custom-style.html">
+  <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
   <link rel="import" href="../../polymer/lib/utils/unresolved.html">
   <link rel="import" href="../oo-datatable.html">
+  <link rel="import" href="../oo-datatable-pager.html">
+  <link rel="import" href="../oo-toolbar.html">
 
   <style>
     body {
@@ -38,17 +42,46 @@
         overflow: hidden;
       }
 
-      .content {
+      #content {
+        margin: 25px 0;
         padding: 16px 40px;
+      }
+
+      #pager {
+        min-height: 56px;
       }
     </style>
   </custom-style>
 
-  <main class="content">
-    <oo-datatable>
-      content
-    </oo-datatable>
-  </main>
+  <dom-bind>
+    <template>
+      <iron-ajax auto
+        url="https://demo.vaadin.com/demo-data/1.0/people?count=200"
+        handle-as="json"
+        last-response="{{users}}">
+      </iron-ajax>
+
+      <oo-toolbar>
+        <div main-title spacer no-flex>
+          <div>&lt;oo-datatable&gt; Demo</div>
+        </div>
+      </oo-toolbar>
+
+      <main id="content">
+        <oo-datatable items="[[users.result]]">
+          <div slot="footer">
+            <oo-datatable-pager
+              id="pager"
+              items-size="200"
+              selected-items-size="0"
+              page-number="1"
+              number-of-pages="1">
+            </oo-datatable-pager>
+          </div>
+        </oo-datatable>
+      </main>
+    </template>
+  </dom-bind>
 </body>
 
 </html>

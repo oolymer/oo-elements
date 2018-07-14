@@ -1,0 +1,156 @@
+<link rel="import" href="../font-roboto/roboto.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-styles/paper-styles.html">
+<link rel="import" href="../paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="oo-datatable-pager">
+  <template>
+    <style>
+      :host {
+        display: block;
+        @apply --paper-font-common-base;
+        border-top: 1px solid var(--material-divider-color);
+      }
+
+      #container {
+        background: white;
+        padding: 10px 15px;
+        @apply --layout-horizontal;
+        @apply --layout-center;
+      }
+
+      .spacer {
+        @apply --layout-flex;
+      }
+
+      .textLeft, .textRight {
+        padding-right: 15px;
+        color: var(--paper-grey-500);
+      }
+    </style>
+
+
+    <div id="container">
+      <div class="textLeft" hidden$="[[hideTextLeft]]">
+        <slot name="textLeft">
+          <span>[[_calculateTextLeft(itemsSize, selectedItemsSize)]]</span>
+        </slot>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="textRight" hidden$="[[hideTextRight]]">
+        <slot name="textRight">
+          <span>[[_calculateTextRight(pageNumber, numberOfPages)]]</span>
+        </slot>
+      </div>
+
+      <div class="navigationButtons">
+        <paper-icon-button id="firstPageButton"
+                           disabled$="[[disableButtons]]"
+                           on-tap="_firstPage"
+                           icon="first-page"></paper-icon-button>
+
+        <paper-icon-button id="previousPageButton"
+                           disabled$="[[disableButtons]]"
+                           on-tap="_previousPage"
+                           icon="chevron-left"></paper-icon-button>
+
+        <paper-icon-button id="nextPageButton"
+                           disabled$="[[disableButtons]]"
+                           on-tap="_nextPage"
+                           icon="chevron-right"></paper-icon-button>
+
+        <paper-icon-button id="lastPageButton"
+                           disabled$="[[disableButtons]]"
+                           on-tap="_lastPage"
+                           icon="last-page"></paper-icon-button>
+
+        <paper-tooltip for="firstPageButton" offset="0">First page</paper-tooltip>
+        <paper-tooltip for="previousPageButton" offset="0">Previous page</paper-tooltip>
+        <paper-tooltip for="nextPageButton" offset="0">Next page</paper-tooltip>
+        <paper-tooltip for="lastPageButton" offset="0">Last page</paper-tooltip>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    (function () {
+      class OoDatatablePager extends Polymer.Element {
+        static get is() {
+          return "oo-datatable-pager"
+        }
+
+        static get properties() {
+          return {
+            itemsSize: {
+              type: Number,
+              value: () => 0,
+              notify: true
+            },
+
+            selectedItemsSize: {
+              type: Number,
+              value: () => 0,
+              notify: true
+            },
+
+            pageNumber: {
+              type: Number,
+              value: () => 0,
+              notify: true
+            },
+
+            numberOfPages: {
+              type: Number,
+              value: () => 0,
+              notify: true
+            },
+
+            hideTextLeft: {
+              type: Boolean,
+              value: () => false
+            },
+
+            hideTextRight: {
+              type: Boolean,
+              value: () => false
+            },
+
+            disableButtons: {
+              type: Boolean,
+              value: () => false
+            },
+          }
+        }
+
+        ready() {
+          super.ready()
+          this._log("ready")
+        }
+
+        _calculateTextLeft(itemsSize, selectedItemsSize) {
+          this._log("calculate text left:", itemsSize, selectedItemsSize)
+          if (selectedItemsSize > 0) {
+            return `${selectedItemsSize} selected items`
+          }
+          return `${itemsSize} items`
+        }
+
+        _calculateTextRight(pageNumber, numberOfPages) {
+          this._log("calculate text right:", pageNumber, numberOfPages)
+          return `page ${pageNumber} of ${numberOfPages}`
+        }
+
+        _log(...messages) {
+          console.log(`[${this.localName}]`, ...messages)
+        }
+      }
+
+      window.customElements.define(OoDatatablePager.is, OoDatatablePager)
+    }())
+  </script>
+</dom-module>

@@ -1,0 +1,60 @@
+<script src="../../bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+<script src="../../bower_components/web-component-tester/browser.js"></script>
+<script src="../../bower_components/oo-test-helpers/mocha-extensions.js"></script>
+
+<link rel="import" href="../../oo-datatable-pager.html">
+
+<test-fixture id="elementFixture">
+  <template>
+    <oo-datatable-pager></oo-datatable-pager>
+  </template>
+</test-fixture>
+
+<script>
+  suite("oo-datatable-pager", () => {
+    suite("element fixture", () => {
+      let element
+
+      setup(done => {
+        element = fixture("elementFixture")
+        element.style.cssText += ";width:500px"
+        flush(done)
+      })
+
+      suite("properties", () => {
+        test("has properties", done => {
+          // when:
+          flush(() => {
+            // then:
+            expect(element.__data).to.eql({
+              itemsSize: 0,
+              selectedItemsSize: 0,
+              pageNumber: 0,
+              numberOfPages: 0,
+              hideTextLeft: false,
+              hideTextRight: false,
+              disableButtons: false,
+            })
+            done()
+          })
+        })
+      })
+
+      suite("template bindings", () => {
+        test.wait("binds properties", done => {
+          element.set("itemsSize", 42)
+          element.set("pageNumber", 1)
+          element.set("numberOfPages", 7)
+
+          // when:
+          flush(() => {
+            // then:
+            element.set("pageNumber", 2)
+            element.set("disableButtons", true)
+            // done()
+          })
+        })
+      })
+    })
+  })
+</script>

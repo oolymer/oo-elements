@@ -1,5 +1,5 @@
+<link rel="import" href="../paper-styles/paper-styles.html">
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../iron-ajax/iron-ajax.html">
 <link rel="import" href="../vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../vaadin-grid/vaadin-grid-column.html">
 <link rel="import" href="../vaadin-material-theme/vaadin-grid.html">
@@ -10,43 +10,47 @@
       :host {
         display: block;
       }
+
+      #container {
+        /* height: 100%; */
+        @apply --shadow-elevation-2dp;
+      }
+
+      #grid {
+        /* height: inherit; */
+        border: none !important;
+      }
     </style>
 
-    <app-toolbar>
-      <slot></slot>
-    </app-toolbar>
+    <div id="container">
+      <slot name="header"></slot>
 
-    <iron-ajax auto
-      url="https://demo.vaadin.com/demo-data/1.0/people?count=200"
-      handle-as="json"
-      last-response="{{users}}">
-    </iron-ajax>
+      <vaadin-grid id="grid" items="[[items]]">
+        <vaadin-grid-column width="60px" flex-grow="0">
+          <template class="header">#</template>
+          <template>[[_calculateItemIndex(index)]]</template>
+        </vaadin-grid-column>
 
-    <vaadin-grid aria-label="Basic Binding Example" items="[[users.result]]">
+        <vaadin-grid-column>
+          <template class="header">First Name</template>
+          <template>[[item.firstName]]</template>
+        </vaadin-grid-column>
 
-      <vaadin-grid-column width="60px" flex-grow="0">
-        <template class="header">#</template>
-        <template>[[index]]</template>
-      </vaadin-grid-column>
+        <vaadin-grid-column>
+          <template class="header">Last Name</template>
+          <template>[[item.lastName]]</template>
+        </vaadin-grid-column>
 
-      <vaadin-grid-column>
-        <template class="header">First Name</template>
-        <template>[[item.firstName]]</template>
-      </vaadin-grid-column>
+        <vaadin-grid-column width="33%">
+          <template class="header">Address</template>
+          <template>
+            <p style="white-space: normal">[[item.address.street]], [[item.address.city]]</p>
+          </template>
+        </vaadin-grid-column>
+      </vaadin-grid>
 
-      <vaadin-grid-column>
-        <template class="header">Last Name</template>
-        <template>[[item.lastName]]</template>
-      </vaadin-grid-column>
-
-      <vaadin-grid-column width="150px">
-        <template class="header">Address</template>
-        <template>
-          <p style="white-space: normal">[[item.address.street]], [[item.address.city]]</p>
-        </template>
-      </vaadin-grid-column>
-
-    </vaadin-grid>
+      <slot name="footer"></slot>
+    </div>
   </template>
 
   <script>
@@ -56,13 +60,52 @@
           return "oo-datatable"
         }
 
+        static get properties() {
+          return {
+            items: {
+              type: Array,
+              value: () => []
+            }
+          }
+        }
+
         ready() {
           super.ready()
-          console.log("[oo-datatable]", "ready")
+          this._log("ready")
+        }
+
+        _calculateItemIndex(index) {
+          return index + 1
+        }
+
+        _log(...messages) {
+          console.log(`[${this.localName}]`, ...messages)
         }
       }
 
       window.customElements.define(OoDatatable.is, OoDatatable)
     }())
   </script>
+</dom-module>
+
+<dom-module id="oo-datatable__vaadin-grid" theme-for="vaadin-grid">
+  <template>
+    <style>
+      :host {
+        border: none;
+        font-size: 16px;
+      }
+
+      [part~="cell"] {
+        font-size: 16px;
+        padding: 0px 12px;
+      }
+
+      [part~="header-cell"] ::slotted(*),
+      [part~="footer-cell"] ::slotted(*) {
+        font-size: 16px;
+        font-weight: normal;
+      }
+    </style>
+  </template>
 </dom-module>
