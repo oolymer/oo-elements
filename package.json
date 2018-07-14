@@ -14,17 +14,21 @@
     "browser-sync": "2.24.5",
     "npm-delay": "https://github.com/krasevych/npm-delay",
     "npm-run-all": "4.1.3",
-    "polyserve": "0.27.12"
+    "polyserve": "0.27.12",
+    "web-component-tester": "6.5.0"
   },
   "scripts": {
-    "start": "\"$npm_execpath\" run dev",
-    "dev": "npm-run-all --parallel serve dev:serve-watch",
-    "dev:serve-watch": "npm-run-all --serial util:delay serve:watch",
+    "start": "\"$npm_execpath\" run dev:serve",
+    "test": "\"$npm_execpath\" run test:chrome:headless",
+    "dev:serve": "npm-run-all --parallel serve dev:serve:watch",
+    "dev:serve:watch": "npm-run-all --serial util:delay serve:watch",
     "install:bower": "bower install --force-latest",
     "serve": "polyserve --port $npm_package_config_portServe",
     "serve:watch": "browser-sync start --port $npm_package_config_portServeWatch --proxy \"localhost:$npm_package_config_portServe\" --no-ui --files \"*.js, *.html, demo/**/*.html, src/**/*.html, test/**/*.html\" --startPath \"/components/$npm_package_name/demo/oo-datatable-demo.html\"",
-    "util:npmbin": "echo $npm_execpath",
-    "util:delay": "npm-delay 1000"
+    "test:chrome": "wct --local chrome --persistent --expanded --skip-selenium-install",
+    "test:chrome:headless": "wct --local chrome --expanded --configFile \"wct-headless.conf.json\"",
+    "util:delay": "npm-delay 1000",
+    "util:npm": "echo $npm_execpath"
   },
   "config": {
     "portServe": "8500",
