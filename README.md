@@ -4,3 +4,6 @@
 
 ![toolbars](doc/toolbars.png)
 
+### oo-datatable and oo-datatable-pager
+
+![datatable](doc/datatable.png)
