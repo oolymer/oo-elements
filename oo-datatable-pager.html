@@ -146,6 +146,26 @@
           return `page ${pageNumber} of ${numberOfPages}`
         }
 
+        _nextPage(event) {
+          this._log("next page:", event)
+          this.set("pageNumber", this.pageNumber + 1)
+        }
+
+        _previousPage(event) {
+          this._log("previous page:", event)
+          this.set("pageNumber", this.pageNumber - 1)
+        }
+
+        _firstPage(event) {
+          this._log("first page:", event)
+          this.set("pageNumber", 1)
+        }
+
+        _lastPage(event) {
+          this._log("last page:", event)
+          this.set("pageNumber", this.numberOfPages)
+        }
+
         _log(...messages) {
           console.log(`[${this.localName}]`, ...messages)
         }
