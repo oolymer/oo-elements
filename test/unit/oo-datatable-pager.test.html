@@ -87,6 +87,30 @@
             element.set("numberOfPages", 7)
           })
 
+          test("first page button", done => {
+            // when:
+            flush(() => {
+              const button = element.shadowRoot.querySelector("#firstPageButton")
+              MockInteractions.tap(button)
+
+              // then:
+              expect(element.pageNumber).to.eql(1)
+              done()
+            })
+          })
+
+          test("last page button", done => {
+            // when:
+            flush(() => {
+              const button = element.shadowRoot.querySelector("#lastPageButton")
+              MockInteractions.tap(button)
+
+              // then:
+              expect(element.pageNumber).to.eql(7)
+              done()
+            })
+          })
+
           test("next page button", done => {
             // when:
             flush(() => {
@@ -111,26 +135,30 @@
             })
           })
 
-          test("first page button", done => {
+          test("next page button clamp limit", done => {
+            element.set("pageNumber", 7)
+
             // when:
             flush(() => {
-              const button = element.shadowRoot.querySelector("#firstPageButton")
-              MockInteractions.tap(button)
-
-              // then:
-              expect(element.pageNumber).to.eql(1)
-              done()
-            })
-          })
-
-          test("last page button", done => {
-            // when:
-            flush(() => {
-              const button = element.shadowRoot.querySelector("#lastPageButton")
+              const button = element.shadowRoot.querySelector("#nextPageButton")
               MockInteractions.tap(button)
 
               // then:
               expect(element.pageNumber).to.eql(7)
+              done()
+            })
+          })
+
+          test("previous page button clamp limit", done => {
+            element.set("pageNumber", 1)
+
+            // when:
+            flush(() => {
+              const button = element.shadowRoot.querySelector("#previousPageButton")
+              MockInteractions.tap(button)
+
+              // then:
+              expect(element.pageNumber).to.eql(1)
               done()
             })
           })

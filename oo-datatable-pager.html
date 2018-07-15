@@ -146,24 +146,34 @@
           return `page ${pageNumber} of ${numberOfPages}`
         }
 
-        _nextPage(event) {
-          this._log("next page:", event)
-          this.set("pageNumber", this.pageNumber + 1)
-        }
-
-        _previousPage(event) {
-          this._log("previous page:", event)
-          this.set("pageNumber", this.pageNumber - 1)
-        }
-
         _firstPage(event) {
           this._log("first page:", event)
-          this.set("pageNumber", 1)
+          const firstPage = 1
+          this.set("pageNumber", firstPage)
         }
 
         _lastPage(event) {
           this._log("last page:", event)
-          this.set("pageNumber", this.numberOfPages)
+          const lastPage = this.numberOfPages
+          this.set("pageNumber", lastPage)
+        }
+
+        _nextPage(event) {
+          this._log("next page:", event)
+          const firstPage = 1
+          const lastPage = this.numberOfPages
+          this.set("pageNumber", this._clampNumber(this.pageNumber + 1, firstPage, lastPage))
+        }
+
+        _previousPage(event) {
+          this._log("previous page:", event)
+          const firstPage = 1
+          const lastPage = this.numberOfPages
+          this.set("pageNumber", this._clampNumber(this.pageNumber - 1, firstPage, lastPage))
+        }
+
+        _clampNumber(value, minValue, maxValue) {
+          return Math.min(Math.max(value, minValue), maxValue)
         }
 
         _log(...messages) {
