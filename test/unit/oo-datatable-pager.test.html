@@ -10,7 +10,11 @@
   </template>
 </test-fixture>
 
-<script>
+<script type="module">
+  export function isElement(value) {
+    return value instanceof Element
+  }
+
   suite("oo-datatable-pager", () => {
     suite("element fixture", () => {
       let element
@@ -41,16 +45,33 @@
       })
 
       suite("template bindings", () => {
-        test("binds properties", done => {
+        test("updates textLeft", done => {
           element.set("itemsSize", 42)
-          element.set("pageNumber", 1)
+
+          // when:
+          flush(() => {
+            const slot = element.shadowRoot.querySelector("slot[name=textLeft]")
+            const elem = slot.assignedNodes({ flatten: true })
+              .filter(it => isElement(it))[0]
+
+            // then:
+            expect(elem.outerHTML).to.eql("<span>42 items</span>")
+            done()
+          })
+        })
+
+        test("updates textRight", done => {
+          element.set("pageNumber", 2)
           element.set("numberOfPages", 7)
 
           // when:
           flush(() => {
+            const slot = element.shadowRoot.querySelector("slot[name=textRight]")
+            const elem = slot.assignedNodes({ flatten: true })
+              .filter(it => isElement(it))[0]
+
             // then:
-            element.set("pageNumber", 2)
-            element.set("disableButtons", true)
+            expect(elem.outerHTML).to.eql("<span>page 2 of 7</span>")
             done()
           })
         })
