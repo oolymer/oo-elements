@@ -41,7 +41,7 @@
       })
 
       suite("template bindings", () => {
-        test.wait("binds properties", done => {
+        test("binds properties", done => {
           element.set("itemsSize", 42)
           element.set("pageNumber", 1)
           element.set("numberOfPages", 7)
@@ -51,7 +51,7 @@
             // then:
             element.set("pageNumber", 2)
             element.set("disableButtons", true)
-            // done()
+            done()
           })
         })
       })
