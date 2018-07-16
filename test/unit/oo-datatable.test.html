@@ -1,0 +1,54 @@
+<!doctype html>
+<script src="../../../webcomponentsjs/webcomponents-loader.js"></script>
+<script src="../../../web-component-tester/browser.js"></script>
+<script src="../../../oo-test-helpers/mocha-extensions.js"></script>
+
+<link rel="import" href="../../../iron-test-helpers/iron-test-helpers.html">
+<link rel="import" href="../../../oo-test-helpers/oo-test-helpers.html">
+<link rel="import" href="../../oo-datatable.html">
+
+<test-fixture id="elementFixture">
+  <template>
+    <oo-datatable></oo-datatable>
+  </template>
+</test-fixture>
+
+<script>
+  function isElement(value) {
+    return value instanceof Element
+  }
+
+  suite("oo-datatable", () => {
+    suite.only("element fixture", () => {
+      let element
+      let elementItems
+
+      setup.data("fixtures/people-200.json", data => {
+        // given:
+        elementItems = data.result
+      })
+
+      setup(done => {
+        element = fixture("elementFixture")
+        element.style.cssText += ";width:500px"
+        flush(done)
+      })
+
+      test("load items into table", done => {
+        // when:
+        element.items = elementItems
+
+        flush(() => {
+          const grid = element.shadowRoot.querySelector("#grid")
+
+          // then:
+          expect(element.__data).to.eql({
+            items: elementItems
+          })
+          expect(grid.items).to.eql({ length: 200 })
+          done()
+        })
+      })
+    })
+  })
+</script>
