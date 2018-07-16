@@ -1,3 +1,5 @@
+<link rel="import" href="../font-roboto/roboto.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../paper-styles/paper-styles.html">
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../vaadin-grid/vaadin-grid.html">
@@ -9,45 +11,54 @@
     <style>
       :host {
         display: block;
+        @apply --paper-font-common-base;
+        @apply --layout-vertical;
       }
 
       #container {
-        /* height: 100%; */
         @apply --shadow-elevation-2dp;
+        @apply --layout-vertical;
+        @apply --layout-flex;
+      }
+
+      #content {
+        @apply --layout-vertical;
+        @apply --layout-flex;
       }
 
       #grid {
-        /* height: inherit; */
-        border: none !important;
+        @apply --layout-flex;
       }
     </style>
 
     <div id="container">
       <slot name="header"></slot>
 
-      <vaadin-grid id="grid" items="[[items]]">
-        <vaadin-grid-column width="60px" flex-grow="0">
-          <template class="header">#</template>
-          <template>[[_calculateItemIndex(index)]]</template>
-        </vaadin-grid-column>
+      <div id="content">
+        <vaadin-grid id="grid">
+          <vaadin-grid-column width="60px" flex-grow="0">
+            <template class="header">#</template>
+            <template>[[_calculateItemIndex(index)]]</template>
+          </vaadin-grid-column>
 
-        <vaadin-grid-column>
-          <template class="header">First Name</template>
-          <template>[[item.firstName]]</template>
-        </vaadin-grid-column>
+          <vaadin-grid-column>
+            <template class="header">First Name</template>
+            <template>[[item.firstName]]</template>
+          </vaadin-grid-column>
 
-        <vaadin-grid-column>
-          <template class="header">Last Name</template>
-          <template>[[item.lastName]]</template>
-        </vaadin-grid-column>
+          <vaadin-grid-column>
+            <template class="header">Last Name</template>
+            <template>[[item.lastName]]</template>
+          </vaadin-grid-column>
 
-        <vaadin-grid-column width="33%">
-          <template class="header">Address</template>
-          <template>
-            <p style="white-space: normal">[[item.address.street]], [[item.address.city]]</p>
-          </template>
-        </vaadin-grid-column>
-      </vaadin-grid>
+          <vaadin-grid-column width="45%">
+            <template class="header">Address</template>
+            <template>
+              <p style="white-space: normal">[[item.address.street]], [[item.address.city]]</p>
+            </template>
+          </vaadin-grid-column>
+        </vaadin-grid>
+      </div>
 
       <slot name="footer"></slot>
     </div>
@@ -64,7 +75,8 @@
           return {
             items: {
               type: Array,
-              value: () => []
+              value: () => [],
+              observer: "_itemsChanged"
             }
           }
         }
@@ -72,10 +84,35 @@
         ready() {
           super.ready()
           this._log("ready")
+
+          this._initDataProvider()
+        }
+
+        _itemsChanged(items) {
+          this._refreshGridData(0, 10)
         }
 
         _calculateItemIndex(index) {
           return index + 1
+        }
+
+        _initDataProvider() {
+          this._log("init data provider")
+          const grid = this.$.grid
+          grid.set("dataProvider", (params, done) => {
+            this._log("handle data provider", params, this.items.length)
+            // page, pageSize, sortOrders, filters, parentItem
+            // params.page = grid.page
+            done(this.items, this.items.length)
+          })
+        }
+
+        _refreshGridData(page, pageSize) {
+          const grid = this.$.grid
+          grid.set("page", page)
+          grid.set("pageSize", pageSize)
+          grid._scrollToIndex(0)
+          grid.clearCache()
         }
 
         _log(...messages) {
@@ -92,8 +129,9 @@
   <template>
     <style>
       :host {
-        border: none;
         font-size: 15px;
+        border: none;
+        min-height: 0;
       }
 
       [part~="cell"] {

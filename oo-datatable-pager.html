@@ -28,11 +28,10 @@
       }
 
       .textLeft, .textRight {
-        padding-right: 15px;
+        padding-right: 20px;
         color: var(--paper-grey-500);
       }
     </style>
-
 
     <div id="container">
       <div class="textLeft" hidden$="[[hideTextLeft]]">
@@ -102,7 +101,8 @@
             pageNumber: {
               type: Number,
               value: () => 0,
-              notify: true
+              notify: true,
+              observer: "_pageNumberChanged"
             },
 
             numberOfPages: {
@@ -133,12 +133,16 @@
           this._log("ready")
         }
 
+        _pageNumberChanged(pageNumber) {
+          this._log("page number changed:", pageNumber)
+        }
+
         _calculateTextLeft(itemsSize, selectedItemsSize) {
           this._log("calculate text left:", itemsSize, selectedItemsSize)
           if (selectedItemsSize > 0) {
             return `${selectedItemsSize} selected items`
           }
-          return `${itemsSize} items`
+          return `${itemsSize} items total`
         }
 
         _calculateTextRight(pageNumber, numberOfPages) {
@@ -147,26 +151,22 @@
         }
 
         _firstPage(event) {
-          this._log("first page:", event)
           const firstPage = 1
           this.set("pageNumber", firstPage)
         }
 
         _lastPage(event) {
-          this._log("last page:", event)
           const lastPage = this.numberOfPages
           this.set("pageNumber", lastPage)
         }
 
         _nextPage(event) {
-          this._log("next page:", event)
           const firstPage = 1
           const lastPage = this.numberOfPages
           this.set("pageNumber", this._clampNumber(this.pageNumber + 1, firstPage, lastPage))
         }
 
         _previousPage(event) {
-          this._log("previous page:", event)
           const firstPage = 1
           const lastPage = this.numberOfPages
           this.set("pageNumber", this._clampNumber(this.pageNumber - 1, firstPage, lastPage))

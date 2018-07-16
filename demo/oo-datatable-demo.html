@@ -10,6 +10,7 @@
 
   <link rel="import" href="../../font-roboto/roboto.html">
   <link rel="import" href="../../iron-ajax/iron-ajax.html">
+  <link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
   <link rel="import" href="../../paper-styles/classes/global.html">
   <link rel="import" href="../../paper-styles/paper-styles-classes.html">
   <link rel="import" href="../../paper-styles/paper-styles.html">
@@ -31,9 +32,9 @@
   </style>
 </head>
 
-<body unresolved>
+<body unresolved class="fullbleed layout vertical">
   <custom-style>
-    <style>
+    <style include="iron-flex iron-positioning">
       body {
         margin: 0;
         @apply --paper-font-common-base;
@@ -67,15 +68,15 @@
         </div>
       </oo-toolbar>
 
-      <main id="content">
-        <oo-datatable items="[[users.result]]">
+      <main id="content" class="layout vertical flex">
+        <oo-datatable items="[[users.result]]" class="flex">
           <div slot="footer">
             <oo-datatable-pager
               id="pager"
               items-size="200"
               selected-items-size="0"
               page-number="1"
-              number-of-pages="1">
+              number-of-pages="5">
             </oo-datatable-pager>
           </div>
         </oo-datatable>
