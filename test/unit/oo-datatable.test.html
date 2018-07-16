@@ -7,9 +7,15 @@
 <link rel="import" href="../../../oo-test-helpers/oo-test-helpers.html">
 <link rel="import" href="../../oo-datatable.html">
 
-<test-fixture id="elementFixture">
+<test-fixture id="table-fixture">
   <template>
     <oo-datatable></oo-datatable>
+  </template>
+</test-fixture>
+
+<test-fixture id="table-with-data-provider-fixture">
+  <template>
+    <oo-datatable use-data-provider></oo-datatable>
   </template>
 </test-fixture>
 
@@ -19,7 +25,7 @@
   }
 
   suite("oo-datatable", () => {
-    suite.only("element fixture", () => {
+    suite("table fixture", () => {
       let element
       let elementItems
 
@@ -29,21 +35,59 @@
       })
 
       setup(done => {
-        element = fixture("elementFixture")
+        element = fixture("table-fixture")
         element.style.cssText += ";width:500px"
         flush(done)
       })
 
       test("load items into table", done => {
         // when:
-        element.items = elementItems
+        element.setProperties({
+          items: elementItems
+        })
 
         flush(() => {
           const grid = element.shadowRoot.querySelector("#grid")
 
           // then:
           expect(element.__data).to.eql({
-            items: elementItems
+            items: elementItems,
+            // useDataProvider: false
+          })
+          expect(grid.items).to.eql(elementItems)
+          done()
+        })
+      })
+    })
+
+    suite("table with data provider fixture", () => {
+      let element
+      let elementItems
+
+      setup.data("fixtures/people-200.json", data => {
+        // given:
+        elementItems = data.result
+      })
+
+      setup(done => {
+        element = fixture("table-with-data-provider-fixture")
+        element.style.cssText += ";width:500px"
+        flush(done)
+      })
+
+      test("load items into table", done => {
+        // when:
+        element.setProperties({
+          items: elementItems
+        })
+
+        flush(() => {
+          const grid = element.shadowRoot.querySelector("#grid")
+
+          // then:
+          expect(element.__data).to.eql({
+            items: elementItems,
+            // useDataProvider: true
           })
           expect(grid.items).to.eql({ length: 200 })
           done()

@@ -77,6 +77,12 @@
               type: Array,
               value: () => [],
               observer: "_itemsChanged"
+            },
+
+            useDataProvider: {
+              type: Boolean,
+              value: () => false,
+              readOnly: false
             }
           }
         }
@@ -85,11 +91,18 @@
           super.ready()
           this._log("ready")
 
-          this._initDataProvider()
+          if (this.useDataProvider) {
+            this._initDataProvider()
+          }
         }
 
         _itemsChanged(items) {
-          this._refreshGridData(0, 10)
+          if (this.useDataProvider) {
+            this._refreshGridData(0, 10)
+          }
+          else {
+            this.$.grid.items = items
+          }
         }
 
         _calculateItemIndex(index) {
