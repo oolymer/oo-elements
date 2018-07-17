@@ -38,7 +38,7 @@
         <vaadin-grid id="grid">
           <vaadin-grid-column width="60px" flex-grow="0">
             <template class="header">#</template>
-            <template>[[_calculateItemIndex(index)]]</template>
+            <template>[[_calculateItemIndex(index, pageNumber)]]</template>
           </vaadin-grid-column>
 
           <vaadin-grid-column>
@@ -81,12 +81,12 @@
 
             pageNumber: {
               type: Number,
-              value: () => 0
+              value: () => 1
             },
 
             numberOfPages: {
               type: Number,
-              value: () => 0
+              value: () => 1
             },
           }
         }
@@ -100,23 +100,26 @@
             composed: true
           })
           this.dispatchEvent(event)
-          return checkNil(event.detail.service)
+          return requireNotNil(event.detail.service)
         }
 
         ready() {
           super.ready()
           this._log("ready")
+
+          this._log(this.$.grid.pageSize)
         }
 
-        _calculateItemIndex(index) {
-          return index + 1
+        _calculateItemIndex(index, pageNumber) {
+          // pageNumber is 1-based, index is 0-based.
+          return ((pageNumber - 1) * 10) + index + 1
         }
 
         refreshItems(items) {
           this._log("refresh items:", items)
 
           const grid = this.$.grid
-          grid.items = items
+          grid.set("items", items)
           this._setItems(items)
         }
 
@@ -125,18 +128,18 @@
 
           // by default dataProvider is using an arrayDataProvider.
           const grid = this.$.grid
-          if (this._usesDefaultDataProvider()) {
+
+          if (!this._usesDefaultDataProvider()) {
             this._log("initialize custom data provider")
 
             // data provider is called right after we set it.
             grid.set("dataProvider", this._createCustomDataProvider())
           }
 
-          // setting grid.page, and calling grid.clearCache() both refresh dataProvider.
-          grid.setProperties({
-            page,
-            pageSize
-          })
+          // update grid items only when grid.clearCache() is calledis called.
+          grid.set("size", pageSize)
+          this.pageNumber = page || 1
+          grid.__data.pageSize = pageSize
           grid._scrollToIndex(0)
           grid.clearCache()
         }
@@ -146,8 +149,10 @@
           return (params, callback) => {
             const callIndex = index++
 
+            this._log("here:", params.page, this.$.grid.page)
+
             const requestParams = {
-              page: params.page,
+              page: this.pageNumber - 1,
               pageSize: params.pageSize,
               sortOrders: params.sortOrders
             }
@@ -176,9 +181,9 @@
         }
       }
 
-      function checkNil(value) {
+      function requireNotNil(value) {
         if (value === null || value === undefined) {
-          throw new Error("value is nil")
+          throw new Error("illegal argument: value is nil")
         }
         return value
       }

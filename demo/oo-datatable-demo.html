@@ -54,10 +54,10 @@
     </style>
   </custom-style>
 
-  <dom-bind id="mainContext">
+  <dom-bind>
     <template>
       <iron-ajax auto
-        url="https://demo.vaadin.com/demo-data/1.0/people?count=200"
+        url="../test/unit/fixtures/people-200.json"
         handle-as="json">
       </iron-ajax>
 
@@ -75,7 +75,7 @@
           <div slot="footer">
             <oo-datatable-pager
               id="pager"
-              items-size="200"
+              items-size="[[itemsSize]]"
               selected-items-size="0"
               page-number="{{pageNumber}}"
               number-of-pages="{{numberOfPages}}">
@@ -85,36 +85,39 @@
       </main>
 
       <script>
-          let items = []
+        const ITEMS_PER_PAGE = 10
+        let items = []
 
-          const context = document.querySelector("#mainContext")
-          context.set("pageNumber", 1)
-          context.set("numberOfPages", 8)
+        const context = document.querySelector("dom-bind")
 
-          const table = document.querySelector("oo-datatable")
-          table.addEventListener("oo-datatable__inject-service", event => {
-            event.detail.service = {
-              queryItems: (page, pageSize) => {
-                console.log("query items")
-                return items.slice(page * pageSize, (page + 1) * pageSize)
-              }
+        const table = document.querySelector("oo-datatable")
+        table.addEventListener("oo-datatable__inject-service", event => {
+          event.detail.service = {
+            queryItems: (page, pageSize) => {
+              console.log("query items")
+              return items.slice(page * pageSize, (page + 1) * pageSize)
             }
-          })
+          }
+        })
 
-          const ajax = document.querySelector("iron-ajax")
-          ajax.addEventListener("last-response-changed", event => {
-            const response = event.detail.value
-            items = response.result
-            console.log("change items")
-            table.refreshPaginatedItems(0, 10)
-          })
+        const ajax = document.querySelector("iron-ajax")
+        ajax.addEventListener("last-response-changed", event => {
+          const response = event.detail.value
+          items = response.result.slice(0, 25)
+          console.log("change items:", items[0], items[items.length - 1])
 
-          const pager = document.querySelector("oo-datatable-pager")
-          pager.addEventListener("page-number-changed", event => {
-            const pageNumber = event.detail.value
-            console.log("change pageNumber")
-            table.refreshPaginatedItems(pageNumber, 10)
-          })
+          context.set("itemsSize", items.length)
+          context.set("pageNumber", 1)
+          context.set("numberOfPages", Math.ceil(items.length / ITEMS_PER_PAGE))
+          table.refreshPaginatedItems(0, ITEMS_PER_PAGE)
+        })
+
+        const pager = document.querySelector("oo-datatable-pager")
+        pager.addEventListener("page-number-changed", event => {
+          const pageNumber = event.detail.value
+          console.log("change pageNumber")
+          table.refreshPaginatedItems(pageNumber, ITEMS_PER_PAGE)
+        })
       </script>
     </template>
   </dom-bind>

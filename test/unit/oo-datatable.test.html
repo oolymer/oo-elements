@@ -43,7 +43,8 @@
 
           // then:
           expect(element.__data).to.eql({
-            items: elementItems
+            items: elementItems,
+            pageNumber: 1
           })
           expect(grid.items).to.eql(elementItems)
           done()
@@ -68,7 +69,8 @@
 
           // then:
           expect(element.__data).to.eql({
-            items: elementItems.slice(0, 10)
+            items: elementItems.slice(0, 10),
+            pageNumber: 1
           })
           expect(grid.items).to.eql({ length: 10 })
           done()

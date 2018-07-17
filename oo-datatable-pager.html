@@ -100,14 +100,14 @@
 
             pageNumber: {
               type: Number,
-              value: () => 0,
+              value: () => 1,
               notify: true,
               observer: "_pageNumberChanged"
             },
 
             numberOfPages: {
               type: Number,
-              value: () => 0,
+              value: () => 1,
               notify: true
             },
 
@@ -134,11 +134,11 @@
         }
 
         _pageNumberChanged(pageNumber) {
-          this._log("page number changed:", pageNumber)
+          this._debug("page number changed:", pageNumber)
         }
 
         _calculateTextLeft(itemsSize, selectedItemsSize) {
-          this._log("calculate text left:", itemsSize, selectedItemsSize)
+          this._debug("calculate text left:", itemsSize, selectedItemsSize)
           if (selectedItemsSize > 0) {
             return `${selectedItemsSize} selected items`
           }
@@ -146,7 +146,7 @@
         }
 
         _calculateTextRight(pageNumber, numberOfPages) {
-          this._log("calculate text right:", pageNumber, numberOfPages)
+          this._debug("calculate text right:", pageNumber, numberOfPages)
           return `page ${pageNumber} of ${numberOfPages}`
         }
 
@@ -178,6 +178,10 @@
 
         _log(...messages) {
           console.log(`[${this.localName}]`, ...messages)
+        }
+
+        _debug(...messages) {
+          console.debug(`[${this.localName}]`, ...messages)
         }
       }
 
