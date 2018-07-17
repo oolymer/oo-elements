@@ -1,3 +1,5 @@
+<link rel="import" href="../font-roboto/roboto.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../paper-styles/paper-styles.html">
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../vaadin-grid/vaadin-grid.html">
@@ -9,45 +11,54 @@
     <style>
       :host {
         display: block;
+        @apply --paper-font-common-base;
+        @apply --layout-vertical;
       }
 
       #container {
-        /* height: 100%; */
         @apply --shadow-elevation-2dp;
+        @apply --layout-vertical;
+        @apply --layout-flex;
+      }
+
+      #content {
+        @apply --layout-vertical;
+        @apply --layout-flex;
       }
 
       #grid {
-        /* height: inherit; */
-        border: none !important;
+        @apply --layout-flex;
       }
     </style>
 
     <div id="container">
       <slot name="header"></slot>
 
-      <vaadin-grid id="grid" items="[[items]]">
-        <vaadin-grid-column width="60px" flex-grow="0">
-          <template class="header">#</template>
-          <template>[[_calculateItemIndex(index)]]</template>
-        </vaadin-grid-column>
+      <div id="content">
+        <vaadin-grid id="grid">
+          <vaadin-grid-column width="60px" flex-grow="0">
+            <template class="header">#</template>
+            <template>[[_calculateItemIndex(index, pageNumber)]]</template>
+          </vaadin-grid-column>
 
-        <vaadin-grid-column>
-          <template class="header">First Name</template>
-          <template>[[item.firstName]]</template>
-        </vaadin-grid-column>
+          <vaadin-grid-column>
+            <template class="header">First Name</template>
+            <template>[[item.firstName]]</template>
+          </vaadin-grid-column>
 
-        <vaadin-grid-column>
-          <template class="header">Last Name</template>
-          <template>[[item.lastName]]</template>
-        </vaadin-grid-column>
+          <vaadin-grid-column>
+            <template class="header">Last Name</template>
+            <template>[[item.lastName]]</template>
+          </vaadin-grid-column>
 
-        <vaadin-grid-column width="33%">
-          <template class="header">Address</template>
-          <template>
-            <p style="white-space: normal">[[item.address.street]], [[item.address.city]]</p>
-          </template>
-        </vaadin-grid-column>
-      </vaadin-grid>
+          <vaadin-grid-column width="45%">
+            <template class="header">Address</template>
+            <template>
+              <p style="white-space: normal">[[item.address.street]], [[item.address.city]]</p>
+            </template>
+          </vaadin-grid-column>
+        </vaadin-grid>
+      </div>
 
       <slot name="footer"></slot>
     </div>
@@ -64,23 +75,111 @@
           return {
             items: {
               type: Array,
-              value: () => []
-            }
+              value: () => [],
+              readOnly: true
+            },
+
+            pageNumber: {
+              type: Number,
+              value: () => 1
+            },
+
+            numberOfPages: {
+              type: Number,
+              value: () => 1
+            },
           }
+        }
+
+        get service() {
+          const event = new CustomEvent("oo-datatable__inject-service", {
+            detail: {
+              service: null
+            },
+            bubbles: true,
+            composed: true
+          })
+          this.dispatchEvent(event)
+          return requireNotNil(event.detail.service)
         }
 
         ready() {
           super.ready()
           this._log("ready")
+
+          this._log(this.$.grid.pageSize)
         }
 
-        _calculateItemIndex(index) {
-          return index + 1
+        _calculateItemIndex(index, pageNumber) {
+          // pageNumber is 1-based, index is 0-based.
+          return ((pageNumber - 1) * 10) + index + 1
+        }
+
+        refreshItems(items) {
+          this._log("refresh items:", items)
+
+          const grid = this.$.grid
+          grid.set("items", items)
+          this._setItems(items)
+        }
+
+        refreshPaginatedItems(page, pageSize) {
+          this._log("refresh paginated items:", page, pageSize)
+
+          // by default dataProvider is using an arrayDataProvider.
+          const grid = this.$.grid
+
+          if (!grid.dataProvider) {
+            // data provider is called right after we set it.
+            this._log("initialize custom data provider")
+            grid.set("dataProvider", this._createCustomDataProvider())
+          }
+
+          // update grid items only when grid.clearCache() is calledis called.
+          grid.set("size", pageSize)
+          this.pageNumber = page || 1
+          grid.__data.pageSize = pageSize
+          grid._scrollToIndex(0)
+          grid.clearCache()
+        }
+
+        _createCustomDataProvider() {
+          let index = 0
+          return (params, callback) => {
+            const callIndex = index++
+
+            this._log("here:", params.page, this.$.grid.page)
+
+            const requestParams = {
+              page: this.pageNumber - 1,
+              pageSize: params.pageSize,
+              sortOrders: params.sortOrders
+            }
+
+            this._log(`(${callIndex}) request items:`, requestParams)
+            this._requestItems(requestParams)
+              .then(items => {
+                this._log(`(${callIndex}) response items:`, items)
+                callback(items, items.length)
+                this._setItems(items)
+              })
+          }
+        }
+
+        async _requestItems(requestParams) {
+          return this.service.queryItems(requestParams.page, requestParams.pageSize)
         }
 
         _log(...messages) {
           console.log(`[${this.localName}]`, ...messages)
         }
+      }
+
+      function requireNotNil(value) {
+        if (value === null || value === undefined) {
+          throw new Error("illegal argument: value is nil")
+        }
+        return value
       }
 
       window.customElements.define(OoDatatable.is, OoDatatable)
@@ -92,8 +191,9 @@
   <template>
     <style>
       :host {
-        border: none;
         font-size: 15px;
+        border: none;
+        min-height: 0;
       }
 
       [part~="cell"] {

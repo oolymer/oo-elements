@@ -1,7 +1,9 @@
-<script src="../../bower_components/webcomponentsjs/webcomponents-loader.js"></script>
-<script src="../../bower_components/web-component-tester/browser.js"></script>
-<script src="../../bower_components/oo-test-helpers/mocha-extensions.js"></script>
+<script src="../../../webcomponentsjs/webcomponents-loader.js"></script>
+<script src="../../../web-component-tester/browser.js"></script>
+<script src="../../../oo-test-helpers/mocha-extensions.js"></script>
 
+<link rel="import" href="../../../iron-test-helpers/iron-test-helpers.html">
+<link rel="import" href="../../../oo-test-helpers/oo-test-helpers.html">
 <link rel="import" href="../../oo-datatable-pager.html">
 
 <test-fixture id="elementFixture">
@@ -11,6 +13,10 @@
 </test-fixture>
 
 <script>
+  function isElement(value) {
+    return value instanceof Element
+  }
+
   suite("oo-datatable-pager", () => {
     suite("element fixture", () => {
       let element
@@ -29,8 +35,8 @@
             expect(element.__data).to.eql({
               itemsSize: 0,
               selectedItemsSize: 0,
-              pageNumber: 0,
-              numberOfPages: 0,
+              pageNumber: 1,
+              numberOfPages: 1,
               hideTextLeft: false,
               hideTextRight: false,
               disableButtons: false,
@@ -41,17 +47,120 @@
       })
 
       suite("template bindings", () => {
-        test("binds properties", done => {
+        test("updates textLeft", done => {
+          // given:
           element.set("itemsSize", 42)
-          element.set("pageNumber", 1)
+
+          // when:
+          flush(() => {
+            const slot = element.shadowRoot.querySelector("slot[name=textLeft]")
+            const elem = slot.assignedNodes({ flatten: true })
+              .filter(isElement)[0]
+
+            // then:
+            expect(elem.outerHTML).to.eql("<span>42 items total</span>")
+            done()
+          })
+        })
+
+        test("updates textRight", done => {
+          // given:
+          element.set("pageNumber", 3)
           element.set("numberOfPages", 7)
 
           // when:
           flush(() => {
+            const slot = element.shadowRoot.querySelector("slot[name=textRight]")
+            const elem = slot.assignedNodes({ flatten: true })
+              .filter(isElement)[0]
+
             // then:
-            element.set("pageNumber", 2)
-            element.set("disableButtons", true)
+            expect(elem.outerHTML).to.eql("<span>page 3 of 7</span>")
             done()
+          })
+        })
+
+        suite("handles navigation buttons", done => {
+          setup(() => {
+            // given::
+            element.set("pageNumber", 3)
+            element.set("numberOfPages", 7)
+          })
+
+          test("first page button", done => {
+            // when:
+            flush(() => {
+              const button = element.shadowRoot.querySelector("#firstPageButton")
+              MockInteractions.tap(button)
+
+              // then:
+              expect(element.pageNumber).to.eql(1)
+              done()
+            })
+          })
+
+          test("last page button", done => {
+            // when:
+            flush(() => {
+              const button = element.shadowRoot.querySelector("#lastPageButton")
+              MockInteractions.tap(button)
+
+              // then:
+              expect(element.pageNumber).to.eql(7)
+              done()
+            })
+          })
+
+          test("next page button", done => {
+            // when:
+            flush(() => {
+              const button = element.shadowRoot.querySelector("#nextPageButton")
+              MockInteractions.tap(button)
+
+              // then:
+              expect(element.pageNumber).to.eql(4)
+              done()
+            })
+          })
+
+          test("previous page button", done => {
+            // when:
+            flush(() => {
+              const button = element.shadowRoot.querySelector("#previousPageButton")
+              MockInteractions.tap(button)
+
+              // then:
+              expect(element.pageNumber).to.eql(2)
+              done()
+            })
+          })
+
+          test("next page button clamp limit", done => {
+            element.set("pageNumber", 7)
+
+            // when:
+            flush(() => {
+              const button = element.shadowRoot.querySelector("#nextPageButton")
+              MockInteractions.tap(button)
+
+              // then:
+              expect(element.pageNumber).to.eql(7)
+              done()
+            })
+          })
+
+          test("previous page button clamp limit", done => {
+            element.set("pageNumber", 1)
+
+            // when:
+            flush(() => {
+              const button = element.shadowRoot.querySelector("#previousPageButton")
+              MockInteractions.tap(button)
+
+              // then:
+              expect(element.pageNumber).to.eql(1)
+              done()
+            })
           })
         })
       })

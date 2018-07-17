@@ -1,0 +1,81 @@
+<!doctype html>
+<script src="../../../webcomponentsjs/webcomponents-loader.js"></script>
+<script src="../../../web-component-tester/browser.js"></script>
+<script src="../../../oo-test-helpers/mocha-extensions.js"></script>
+
+<link rel="import" href="../../../iron-test-helpers/iron-test-helpers.html">
+<link rel="import" href="../../../oo-test-helpers/oo-test-helpers.html">
+<link rel="import" href="../../oo-datatable.html">
+
+<test-fixture id="table-fixture">
+  <template>
+    <oo-datatable></oo-datatable>
+  </template>
+</test-fixture>
+
+<script>
+  suite("oo-datatable", () => {
+    suite("table fixture", () => {
+      let element
+      let elementItems
+
+      setup.data("fixtures/people-200.json", data => {
+        // given:
+        elementItems = data.result
+      })
+
+      setup(done => {
+        // given:
+        element = fixture("table-fixture")
+        element.style.cssText += ";width:500px"
+        element.setProperties({
+          items: elementItems
+        })
+        flush(done)
+      })
+
+      test("load items into table", done => {
+        // when:
+        element.refreshItems(elementItems)
+
+        flush(() => {
+          const grid = element.shadowRoot.querySelector("#grid")
+
+          // then:
+          expect(element.__data).to.eql({
+            items: elementItems,
+            pageNumber: 1
+          })
+          expect(grid.items).to.eql(elementItems)
+          done()
+        })
+      })
+
+      test("load paginated items into table using service", done => {
+        // given:
+        element.addEventListener("oo-datatable__inject-service", event => {
+          event.detail.service = {
+            queryItems: (page, pageSize) => {
+              return elementItems.slice(page * pageSize, (page + 1) * pageSize)
+            }
+          }
+        })
+
+        // when:
+        element.refreshPaginatedItems(0, 10)
+
+        flush(() => {
+          const grid = element.shadowRoot.querySelector("#grid")
+
+          // then:
+          expect(element.__data).to.eql({
+            items: elementItems.slice(0, 10),
+            pageNumber: 1
+          })
+          expect(grid.items).to.eql({ length: 10 })
+          done()
+        })
+      })
+    })
+  })
+</script>

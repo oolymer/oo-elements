@@ -28,11 +28,10 @@
       }
 
       .textLeft, .textRight {
-        padding-right: 15px;
+        padding-right: 20px;
         color: var(--paper-grey-500);
       }
     </style>
-
 
     <div id="container">
       <div class="textLeft" hidden$="[[hideTextLeft]]">
@@ -101,13 +100,14 @@
 
             pageNumber: {
               type: Number,
-              value: () => 0,
-              notify: true
+              value: () => 1,
+              notify: true,
+              observer: "_pageNumberChanged"
             },
 
             numberOfPages: {
               type: Number,
-              value: () => 0,
+              value: () => 1,
               notify: true
             },
 
@@ -133,21 +133,55 @@
           this._log("ready")
         }
 
+        _pageNumberChanged(pageNumber) {
+          this._debug("page number changed:", pageNumber)
+        }
+
         _calculateTextLeft(itemsSize, selectedItemsSize) {
-          this._log("calculate text left:", itemsSize, selectedItemsSize)
+          this._debug("calculate text left:", itemsSize, selectedItemsSize)
           if (selectedItemsSize > 0) {
             return `${selectedItemsSize} selected items`
           }
-          return `${itemsSize} items`
+          return `${itemsSize} items total`
         }
 
         _calculateTextRight(pageNumber, numberOfPages) {
-          this._log("calculate text right:", pageNumber, numberOfPages)
+          this._debug("calculate text right:", pageNumber, numberOfPages)
           return `page ${pageNumber} of ${numberOfPages}`
+        }
+
+        _firstPage(event) {
+          const firstPage = 1
+          this.set("pageNumber", firstPage)
+        }
+
+        _lastPage(event) {
+          const lastPage = this.numberOfPages
+          this.set("pageNumber", lastPage)
+        }
+
+        _nextPage(event) {
+          const firstPage = 1
+          const lastPage = this.numberOfPages
+          this.set("pageNumber", this._clampNumber(this.pageNumber + 1, firstPage, lastPage))
+        }
+
+        _previousPage(event) {
+          const firstPage = 1
+          const lastPage = this.numberOfPages
+          this.set("pageNumber", this._clampNumber(this.pageNumber - 1, firstPage, lastPage))
+        }
+
+        _clampNumber(value, minValue, maxValue) {
+          return Math.min(Math.max(value, minValue), maxValue)
         }
 
         _log(...messages) {
           console.log(`[${this.localName}]`, ...messages)
+        }
+
+        _debug(...messages) {
+          console.debug(`[${this.localName}]`, ...messages)
         }
       }
 
