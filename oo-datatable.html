@@ -129,10 +129,9 @@
           // by default dataProvider is using an arrayDataProvider.
           const grid = this.$.grid
 
-          if (!this._usesDefaultDataProvider()) {
-            this._log("initialize custom data provider")
-
+          if (!grid.dataProvider) {
             // data provider is called right after we set it.
+            this._log("initialize custom data provider")
             grid.set("dataProvider", this._createCustomDataProvider())
           }
 
@@ -169,11 +168,6 @@
 
         async _requestItems(requestParams) {
           return this.service.queryItems(requestParams.page, requestParams.pageSize)
-        }
-
-        _usesDefaultDataProvider() {
-          const grid = this.$.grid
-          return grid.items instanceof Array
         }
 
         _log(...messages) {
