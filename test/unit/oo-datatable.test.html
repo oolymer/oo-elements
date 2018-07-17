@@ -13,17 +13,7 @@
   </template>
 </test-fixture>
 
-<test-fixture id="table-with-data-provider-fixture">
-  <template>
-    <oo-datatable use-data-provider></oo-datatable>
-  </template>
-</test-fixture>
-
 <script>
-  function isElement(value) {
-    return value instanceof Element
-  }
-
   suite("oo-datatable", () => {
     suite("table fixture", () => {
       let element
@@ -35,61 +25,52 @@
       })
 
       setup(done => {
+        // given:
         element = fixture("table-fixture")
         element.style.cssText += ";width:500px"
+        element.setProperties({
+          items: elementItems
+        })
         flush(done)
       })
 
       test("load items into table", done => {
         // when:
-        element.setProperties({
-          items: elementItems
-        })
+        element.refreshItems(elementItems)
 
         flush(() => {
           const grid = element.shadowRoot.querySelector("#grid")
 
           // then:
           expect(element.__data).to.eql({
-            items: elementItems,
-            // useDataProvider: false
+            items: elementItems
           })
           expect(grid.items).to.eql(elementItems)
           done()
         })
       })
-    })
 
-    suite("table with data provider fixture", () => {
-      let element
-      let elementItems
-
-      setup.data("fixtures/people-200.json", data => {
+      test("load paginated items into table using service", done => {
         // given:
-        elementItems = data.result
-      })
-
-      setup(done => {
-        element = fixture("table-with-data-provider-fixture")
-        element.style.cssText += ";width:500px"
-        flush(done)
-      })
-
-      test("load items into table", done => {
-        // when:
-        element.setProperties({
-          items: elementItems
+        element.addEventListener("oo-datatable__inject-service", event => {
+          event.detail.service = {
+            queryItems: (page, pageSize) => {
+              return elementItems.slice(page * pageSize, (page + 1) * pageSize)
+            }
+          }
         })
+
+        // when:
+        element.refreshPaginatedItems(0, 10)
 
         flush(() => {
           const grid = element.shadowRoot.querySelector("#grid")
 
           // then:
           expect(element.__data).to.eql({
-            items: elementItems,
-            // useDataProvider: true
+            items: elementItems.slice(0, 10)
           })
-          expect(grid.items).to.eql({ length: 200 })
+          expect(grid.items).to.eql({ length: 10 })
           done()
         })
       })

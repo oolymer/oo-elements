@@ -54,12 +54,11 @@
     </style>
   </custom-style>
 
-  <dom-bind>
+  <dom-bind id="mainContext">
     <template>
       <iron-ajax auto
         url="https://demo.vaadin.com/demo-data/1.0/people?count=200"
-        handle-as="json"
-        last-response="{{users}}">
+        handle-as="json">
       </iron-ajax>
 
       <oo-toolbar>
@@ -69,18 +68,54 @@
       </oo-toolbar>
 
       <main id="content" class="layout vertical flex">
-        <oo-datatable items="[[users.result]]" class="flex">
+        <oo-datatable
+          class="flex"
+          page-number="[[pageNumber]]"
+          number-of-pages="[[numberOfPages]]">
           <div slot="footer">
             <oo-datatable-pager
               id="pager"
               items-size="200"
               selected-items-size="0"
-              page-number="1"
-              number-of-pages="5">
+              page-number="{{pageNumber}}"
+              number-of-pages="{{numberOfPages}}">
             </oo-datatable-pager>
           </div>
         </oo-datatable>
       </main>
+
+      <script>
+          let items = []
+
+          const context = document.querySelector("#mainContext")
+          context.set("pageNumber", 1)
+          context.set("numberOfPages", 8)
+
+          const table = document.querySelector("oo-datatable")
+          table.addEventListener("oo-datatable__inject-service", event => {
+            event.detail.service = {
+              queryItems: (page, pageSize) => {
+                console.log("query items")
+                return items.slice(page * pageSize, (page + 1) * pageSize)
+              }
+            }
+          })
+
+          const ajax = document.querySelector("iron-ajax")
+          ajax.addEventListener("last-response-changed", event => {
+            const response = event.detail.value
+            items = response.result
+            console.log("change items")
+            table.refreshPaginatedItems(0, 10)
+          })
+
+          const pager = document.querySelector("oo-datatable-pager")
+          pager.addEventListener("page-number-changed", event => {
+            const pageNumber = event.detail.value
+            console.log("change pageNumber")
+            table.refreshPaginatedItems(pageNumber, 10)
+          })
+      </script>
     </template>
   </dom-bind>
 </body>
