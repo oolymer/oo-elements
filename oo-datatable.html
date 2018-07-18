@@ -36,7 +36,9 @@
       <slot name="header"></slot>
 
       <div id="content">
-        <vaadin-grid id="grid">
+        <vaadin-grid
+          id="grid"
+          multi-sort>
           <vaadin-grid-column width="60px" flex-grow="0">
             <template class="header">#</template>
             <template>[[_calculateItemIndex(index, pageNumber)]]</template>

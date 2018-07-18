@@ -2,6 +2,7 @@
 <script src="../../../webcomponentsjs/webcomponents-loader.js"></script>
 <script src="../../../web-component-tester/browser.js"></script>
 <script src="../../../oo-test-helpers/mocha-extensions.js"></script>
+<script src="../../../lodash/lodash.js"></script>
 
 <link rel="import" href="../../../iron-test-helpers/iron-test-helpers.html">
 <link rel="import" href="../../../oo-test-helpers/oo-test-helpers.html">
@@ -15,8 +16,7 @@
 
 <script>
   function sortItems(items, valueGetter) {
-    return items.slice()
-      .sort((a, b) => valueGetter(a).localeCompare(valueGetter(b)))
+    return _.sortBy(items.slice(), valueGetter)
   }
 
   function sliceItems(items, page, pageSize) {
@@ -25,8 +25,8 @@
 
   function queryItemsFunction(items) {
     return (page, pageSize, sortOrders) => {
-      if (sortOrders.length > 0) {
-        const { path, direction } = sortOrders[0]
+      // we assume javascript is using a stable sort algorithm.
+      for ({ path, direction } of sortOrders.slice().reverse()) {
         items = sortItems(items, it => it[path])
         if (direction === "desc") {
           items.reverse()
@@ -116,9 +116,37 @@
           // then:
           flush(() => {
             expect(element.items[0].firstName).to.eql("Aaliyah")
-            expect(element.items[0].lastName).to.eql("Carter")
             expect(element.items[1].firstName).to.eql("Aaliyah")
-            expect(element.items[1].lastName).to.eql("Harris")
+            expect(element.items[2].firstName).to.eql("Aaron")
+            done()
+          })
+        })
+      })
+
+      test.wait("click on two different table columns", done => {
+        // given:
+        element.addEventListener("oo-datatable__inject-service", event => {
+          event.detail.service = { queryItems: queryItemsFunction(elementItems) }
+        })
+
+        // and:
+        element.refreshPaginatedItems(0, 10)
+
+        // when:
+        flush(() => {
+          const grid = element.shadowRoot.querySelector("vaadin-grid")
+          const sorters = grid.querySelectorAll("vaadin-grid-sorter")
+          MockInteractions.tap(sorters[0])
+          MockInteractions.tap(sorters[1])
+
+          // then:
+          flush(() => {
+            expect(element.items[0].firstName).to.eql("Jack")
+            expect(element.items[0].lastName).to.eql("Adams")
+            expect(element.items[1].firstName).to.eql("Daniel")
+            expect(element.items[1].lastName).to.eql("Anderson")
+            expect(element.items[2].firstName).to.eql("Eli")
+            expect(element.items[2].lastName).to.eql("Anderson")
             done()
           })
         })
