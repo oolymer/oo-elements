@@ -161,8 +161,6 @@
           return (params, callback) => {
             const callIndex = index++
 
-            this._log("here:", params.page, this.$.grid.page)
-
             const requestParams = {
               page: this.pageNumber - 1,
               pageSize: params.pageSize,
@@ -180,7 +178,8 @@
         }
 
         async _requestItems(requestParams) {
-          return this.service.queryItems(requestParams.page, requestParams.pageSize)
+          return this.service.queryItems(
+            requestParams.page, requestParams.pageSize, requestParams.sortOrders)
         }
 
         _log(...messages) {

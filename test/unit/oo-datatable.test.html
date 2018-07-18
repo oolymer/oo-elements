@@ -14,6 +14,27 @@
 </test-fixture>
 
 <script>
+  function sortItems(items, valueGetter) {
+    return items.slice()
+      .sort((a, b) => valueGetter(a).localeCompare(valueGetter(b)))
+  }
+
+  function sliceItems(items, page, pageSize) {
+    return items.slice(page * pageSize, (page + 1) * pageSize)
+  }
+
+  function queryItemsFunction(items) {
+    return (page, pageSize, sortOrders) => {
+      if (sortOrders.length > 0) {
+        const { path, direction } = sortOrders[0]
+        items = sortItems(items, it => it[path])
+        if (direction === "desc") {
+          items.reverse()
+        }
+      }
+      return sliceItems(items, page, pageSize)
+    }
+  }
   suite("oo-datatable", () => {
     suite("table fixture", () => {
       let element
@@ -74,6 +95,32 @@
           })
           expect(grid.items).to.eql({ length: 10 })
           done()
+        })
+      })
+
+      test("click on table column", done => {
+        // given:
+        element.addEventListener("oo-datatable__inject-service", event => {
+          event.detail.service = { queryItems: queryItemsFunction(elementItems) }
+        })
+
+        // and:
+        element.refreshPaginatedItems(0, 10)
+
+        // when:
+        flush(() => {
+          const grid = element.shadowRoot.querySelector("vaadin-grid")
+          const sorters = grid.querySelectorAll("vaadin-grid-sorter")
+          MockInteractions.tap(sorters[0])
+
+          // then:
+          flush(() => {
+            expect(element.items[0].firstName).to.eql("Aaliyah")
+            expect(element.items[0].lastName).to.eql("Carter")
+            expect(element.items[1].firstName).to.eql("Aaliyah")
+            expect(element.items[1].lastName).to.eql("Harris")
+            done()
+          })
         })
       })
     })
