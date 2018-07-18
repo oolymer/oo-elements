@@ -15,6 +15,11 @@ addons:
   firefox: latest
   sauce_connect: false
 
+cache:
+  directories:
+    - $HOME/.cache/bower
+    - $HOME/.cache/yarn
+
 # run yarn install and install:bower.
 before_script:
   - "export DISPLAY=:99.0"
